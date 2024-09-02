@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predição de Attrition</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #03458b;
+            font-size: 28px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .input-group, .radio-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group input[type="number"] {
+            font-size: 16px;
+        }
+
+        input[type="number"],
+        select,
+        input[type="submit"] {
+            padding: 12px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #03458b;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #023f73;
+        }
+
+        .result {
+            font-size: 20px;
+            font-weight: 600;
+            color: #03458b;
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            border: 2px solid #03458b;
+            border-radius: 6px;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #03458b;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .radio-group label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .radio-group input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .error {
+            color: red;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Formulário de Predição de Attrition</h1>
+        <form method="post" action="/predict">
+            <!-- Gênero -->
+            <div class="radio-group">
+                <label>Gênero:</label>
+                <label><input type="radio" name="gender_ajustado" value="0" required> Feminino</label>
+                <label><input type="radio" name="gender_ajustado" value="1" required> Masculino</label>
+            </div>
+
+            <!-- Horas Extras (OverTime) -->
+            <div class="radio-group">
+                <label>Horas Extras (OverTime):</label>
+                <label><input type="radio" name="Overtime_ajustado" value="0" required> Sim</label>
+                <label><input type="radio" name="Overtime_ajustado" value="1" required> Não</label>
+            </div>
+
+            <!-- Idade -->
+            <div class="input-group">
+                <label for="Age">Idade (18 a 60):</label>
+                <input type="number" id="Age" name="Age" min="18" max="60" step="1" required>
+            </div>
+
+            <!-- Distância do Trabalho -->
+            <div class="input-group">
+                <label for="DistanceFromHome">Distância do Trabalho (1 a 29):</label>
+                <input type="number" id="DistanceFromHome" name="DistanceFromHome" min="1" max="29" step="1" required>
+            </div>
+
+            <!-- Satisfação com o Ambiente -->
+            <div class="input-group">
+                <label for="EnvironmentSatisfaction">Satisfação com o Ambiente (1 a 4):</label>
+                <select id="EnvironmentSatisfaction" name="EnvironmentSatisfaction" required>
+                    <option value="1">1 - Insatisfeito</option>
+                    <option value="2">2 - Neutro</option>
+                    <option value="3">3 - Satisfeito</option>
+                    <option value="4">4 - Muito Satisfeito</option>
+                </select>
+            </div>
+
+            <!-- Envolvimento no Trabalho -->
+            <div class="input-group">
+                <label for="JobInvolvement">Envolvimento no Trabalho (1 a 4):</label>
+                <select id="JobInvolvement" name="JobInvolvement" required>
+                    <option value="1">1 - Baixo</option>
+                    <option value="2">2 - Médio</option>
+                    <option value="3">3 - Alto</option>
+                    <option value="4">4 - Muito Alto</option>
+                </select>
+            </div>
+
+            <!-- Satisfação no Trabalho -->
+            <div class="input-group">
+                <label for="JobSatisfaction">Satisfação no Trabalho (1 a 4):</label>
+                <select id="JobSatisfaction" name="JobSatisfaction" required>
+                    <option value="1">1 - Insatisfeito</option>
+                    <option value="2">2 - Neutro</option>
+                    <option value="3">3 - Satisfeito</option>
+                    <option value="4">4 - Muito Satisfeito</option>
+                </select>
+            </div>
+
+            <!-- Renda Mensal -->
+            <div class="input-group">
+                <label for="MonthlyIncome">Renda Mensal (1009 a 19999):</label>
+                <input type="number" id="MonthlyIncome" name="MonthlyIncome" min="1009" max="19999" step="1" required>
+            </div>
+
+            <!-- Total de Anos Trabalhados -->
+            <div class="input-group">
+                <label for="TotalWorkingYears">Total de Anos Trabalhados (0 a 40):</label>
+                <input type="number" id="TotalWorkingYears" name="TotalWorkingYears" min="0" max="40" step="1" required>
+            </div>
+
+            <!-- Equilíbrio Trabalho-Vida -->
+            <div class="input-group">
+                <label for="WorkLifeBalance">Equilíbrio Trabalho-Vida (1 a 4):</label>
+                <select id="WorkLifeBalance" name="WorkLifeBalance" required>
+                    <option value="1">1 - Baixo</option>
+                    <option value="2">2 - Médio</option>
+                    <option value="3">3 - Alto</option>
+                    <option value="4">4 - Muito Alto</option>
+                </select>
+            </div>
+
+            <!-- Anos na Empresa -->
+            <div class="input-group">
+                <label for="YearsAtCompany">Anos na Empresa (0 a 40):</label>
+                <input type="number" id="YearsAtCompany" name="YearsAtCompany" min="0" max="40" step="1" required>
+            </div>
+
+            <!-- Anos desde a Última Promoção -->
+            <div class="input-group">
+                <label for="YearsSinceLastPromotion">Anos desde a Última Promoção (0 a 15):</label>
+                <input type="number" id="YearsSinceLastPromotion" name="YearsSinceLastPromotion" min="0" max="15" step="1" required>
+            </div>
+
+            <!-- Botão de Envio -->
+            <input type="submit" value="Enviar">
+        </form>
+    </div>
+</body>
+</html>
